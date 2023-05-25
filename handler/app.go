@@ -20,6 +20,8 @@ func StartApp() {
 	todoRoute := route.Group("/todos")
 	{
 		todoRoute.POST("/", todoHandler.CreateTodo)
+		todoRoute.GET("/", todoHandler.GetTodos)
+		todoRoute.GET("/:todoId", todoHandler.GetTodo)
 	}
 
 	route.GET("/", func(ctx *gin.Context) {

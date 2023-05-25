@@ -11,6 +11,8 @@ import (
 
 type TodoService interface {
 	CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, errs.MessageErr)
+	GetTodos() (*dto.Response, errs.MessageErr)
+	GetTodo(todoId int) (*dto.Response, errs.MessageErr)
 }
 
 type todoService struct {
@@ -48,6 +50,65 @@ func (t *todoService) CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, 
 	response := &dto.Response{
 		Status:  "CREATED",
 		Message: "todo created successfully",
+		Data:    todoGetResponse,
+	}
+
+	return response, nil
+}
+
+func (t *todoService) GetTodos() (*dto.Response, errs.MessageErr) {
+	getTodos, err := t.todoRepo.GetAllTodos()
+	if err != nil {
+		return nil, err
+	}
+
+	todoGetResponses := []dto.TodoGetResponse{}
+	for _, todo := range getTodos {
+		todoResponse := dto.TodoResponse{
+			Id:        todo.Id,
+			Title:     todo.Title,
+			Completed: todo.Completed,
+		}
+
+		todoGetResponse := dto.TodoGetResponse{
+			TodoResponse: todoResponse,
+			CreatedAt:    todo.CreatedAt,
+			UpdatedAt:    todo.UpdatedAt,
+		}
+
+		todoGetResponses = append(todoGetResponses, todoGetResponse)
+	}
+
+	response := &dto.Response{
+		Status:  "OK",
+		Message: "all todos found",
+		Data:    todoGetResponses,
+	}
+
+	return response, nil
+}
+
+func (t *todoService) GetTodo(todoId int) (*dto.Response, errs.MessageErr) {
+	getTodo, err := t.todoRepo.GetTodoById(todoId)
+	if err != nil {
+		return nil, err
+	}
+
+	todoResponse := dto.TodoResponse{
+		Id:        getTodo.Id,
+		Title:     getTodo.Title,
+		Completed: getTodo.Completed,
+	}
+
+	todoGetResponse := dto.TodoGetResponse{
+		TodoResponse: todoResponse,
+		CreatedAt:    getTodo.CreatedAt,
+		UpdatedAt:    getTodo.UpdatedAt,
+	}
+
+	response := &dto.Response{
+		Status:  "OK",
+		Message: "todo found",
 		Data:    todoGetResponse,
 	}
 
