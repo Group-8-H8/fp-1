@@ -4,51 +4,51 @@ import "net/http"
 
 type MessageErr interface {
 	Error() string
-	Status() int
+	Code() int
 }
 
 type errData struct {
-	ErrStatus  int    `json:"status"`
+	ErrStatus  string `json:"status"`
 	ErrMessage any    `json:"message"`
-	ErrError   string `json:"error"`
+	ErrCode    int    `json:"code"`
 }
 
 func (e *errData) Error() string {
-	return e.ErrError
+	return e.ErrStatus
 }
 
-func (e *errData) Status() int {
-	return e.ErrStatus
+func (e *errData) Code() int {
+	return e.ErrCode
 }
 
 func NewNotFoundError(message string) MessageErr {
 	return &errData{
-		ErrStatus:  http.StatusNotFound,
+		ErrStatus:  "NOT_FOUND",
 		ErrMessage: message,
-		ErrError:   "NOT_FOUND",
+		ErrCode:    http.StatusNotFound,
 	}
 }
 
 func NewInternalServerError(message string) MessageErr {
 	return &errData{
-		ErrStatus:  http.StatusInternalServerError,
+		ErrStatus:  "INTERNAL_SERVER_ERROR",
 		ErrMessage: message,
-		ErrError:   "INTERNAL_SERVER_ERROR",
+		ErrCode:    http.StatusInternalServerError,
 	}
 }
 
 func NewBadRequest(message string) MessageErr {
 	return &errData{
-		ErrStatus:  http.StatusBadRequest,
+		ErrStatus:  "BAD_REQUEST",
 		ErrMessage: message,
-		ErrError:   "BAD_REQUEST",
+		ErrCode:    http.StatusBadRequest,
 	}
 }
 
 func NewUnprocessableEntity(messages []string) MessageErr {
 	return &errData{
-		ErrStatus:  http.StatusBadRequest,
+		ErrStatus:  "BAD_REQUEST",
 		ErrMessage: messages,
-		ErrError:   "BAD_REQUEST",
+		ErrCode:    http.StatusBadRequest,
 	}
 }
