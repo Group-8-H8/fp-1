@@ -57,3 +57,11 @@ func (t *todoRepo) UpdateTodo(payload entity.Todo) (*entity.Todo, errs.MessageEr
 
 	return &payload, nil
 }
+
+func (t *todoRepo) DeleteTodo(todoId int) errs.MessageErr {
+	if err := t.db.Delete(&entity.Todo{}, todoId).Error; err != nil {
+		return errs.NewInternalServerError("something went wrong")
+	}
+
+	return nil
+}

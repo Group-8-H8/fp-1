@@ -17,6 +17,7 @@ type TodoHandler interface {
 	GetTodos(ctx *gin.Context)
 	GetTodo(ctx *gin.Context)
 	UpdateTodo(ctx *gin.Context)
+	DeleteTodo(ctx *gin.Context)
 }
 
 type todoHandler struct {
@@ -116,6 +117,24 @@ func (t *todoHandler) UpdateTodo(ctx *gin.Context) {
 	response, errUpdated := t.todoService.UpdateTodo(todoId, requestBody)
 	if errUpdated != nil {
 		ctx.AbortWithStatusJSON(errUpdated.Code(), errUpdated)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (t *todoHandler) DeleteTodo(ctx *gin.Context) {
+	param := ctx.Param("todoId")
+	todoId, errConv := strconv.Atoi(param)
+	if errConv != nil {
+		newErrConv := errs.NewBadRequest("invalid todo's id")
+		ctx.AbortWithStatusJSON(newErrConv.Code(), newErrConv)
+		return
+	}
+
+	response, errDeleted := t.todoService.DeleteTodo(todoId)
+	if errDeleted != nil {
+		ctx.AbortWithStatusJSON(errDeleted.Code(), errDeleted)
 		return
 	}
 

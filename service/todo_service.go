@@ -14,6 +14,7 @@ type TodoService interface {
 	GetTodos() (*dto.Response, errs.MessageErr)
 	GetTodo(todoId int) (*dto.Response, errs.MessageErr)
 	UpdateTodo(todoId int, payload dto.TodoRequest) (*dto.Response, errs.MessageErr)
+	DeleteTodo(todoId int) (*dto.Response, errs.MessageErr)
 }
 
 type todoService struct {
@@ -153,4 +154,19 @@ func (t *todoService) UpdateTodo(todoId int, payload dto.TodoRequest) (*dto.Resp
 	return response, nil
 }
 
-// BELUM DITESTING
+func (t *todoService) DeleteTodo(todoId int) (*dto.Response, errs.MessageErr) {
+	if _, errCheck := t.todoRepo.GetTodoById(todoId); errCheck != nil && errCheck.Code() == 404 {
+		return nil, errCheck
+	}
+
+	if errDeleted := t.todoRepo.DeleteTodo(todoId); errDeleted != nil {
+		return nil, errDeleted
+	}
+
+	response := &dto.Response{
+		Status:  "OK",
+		Message: "todo deleted successfully",
+	}
+
+	return response, nil
+}

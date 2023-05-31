@@ -23,6 +23,7 @@ func StartApp() {
 		todoRoute.GET("/", todoHandler.GetTodos)
 		todoRoute.GET("/:todoId", todoHandler.GetTodo)
 		todoRoute.PUT("/:todoId", todoHandler.UpdateTodo)
+		todoRoute.DELETE("/:todoId", todoHandler.DeleteTodo)
 	}
 
 	route.GET("/", func(ctx *gin.Context) {
