@@ -7,6 +7,7 @@ import (
 	"github.com/Group-8-H8/fp-1/pkg/errs"
 	"github.com/Group-8-H8/fp-1/repository/todo_repository"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type todoRepo struct {
@@ -46,4 +47,13 @@ func (t *todoRepo) GetTodoById(todoId int) (*entity.Todo, errs.MessageErr) {
 	}
 
 	return &todo, nil
+}
+
+func (t *todoRepo) UpdateTodo(payload entity.Todo) (*entity.Todo, errs.MessageErr) {
+	err := t.db.Model(&payload).Where("id = ?", payload.Id).Clauses(clause.Returning{}).Updates(entity.Todo{Title: payload.Title, Completed: payload.Completed, UpdatedAt: payload.UpdatedAt}).Error
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &payload, nil
 }

@@ -22,6 +22,7 @@ func StartApp() {
 		todoRoute.POST("/", todoHandler.CreateTodo)
 		todoRoute.GET("/", todoHandler.GetTodos)
 		todoRoute.GET("/:todoId", todoHandler.GetTodo)
+		todoRoute.PUT("/:todoId", todoHandler.UpdateTodo)
 	}
 
 	route.GET("/", func(ctx *gin.Context) {

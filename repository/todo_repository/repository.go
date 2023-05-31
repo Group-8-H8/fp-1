@@ -9,4 +9,5 @@ type TodoRepository interface {
 	CreateTodo(payload entity.Todo) (*entity.Todo, errs.MessageErr)
 	GetAllTodos() ([]entity.Todo, errs.MessageErr)
 	GetTodoById(todoId int) (*entity.Todo, errs.MessageErr)
+	UpdateTodo(payload entity.Todo) (*entity.Todo, errs.MessageErr)
 }

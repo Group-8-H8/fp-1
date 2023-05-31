@@ -16,6 +16,7 @@ type TodoHandler interface {
 	CreateTodo(ctx *gin.Context)
 	GetTodos(ctx *gin.Context)
 	GetTodo(ctx *gin.Context)
+	UpdateTodo(ctx *gin.Context)
 }
 
 type todoHandler struct {
@@ -27,7 +28,7 @@ func NewTodoHandler(todoService service.TodoService) TodoHandler {
 }
 
 func (t *todoHandler) CreateTodo(ctx *gin.Context) {
-	var requestBody dto.CreateTodoRequest
+	var requestBody dto.TodoRequest
 
 	if errBindJSON := ctx.ShouldBindJSON(&requestBody); errBindJSON != nil {
 		errCasting, ok := errBindJSON.(validator.ValidationErrors)
@@ -77,6 +78,44 @@ func (t *todoHandler) GetTodo(ctx *gin.Context) {
 	response, errGetTodos := t.todoService.GetTodo(todoId)
 	if errGetTodos != nil {
 		ctx.AbortWithStatusJSON(errGetTodos.Code(), errGetTodos)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (t *todoHandler) UpdateTodo(ctx *gin.Context) {
+	param := ctx.Param("todoId")
+	todoId, errConv := strconv.Atoi(param)
+	if errConv != nil {
+		newErrConv := errs.NewBadRequest("invalid todo's id")
+		ctx.AbortWithStatusJSON(newErrConv.Code(), newErrConv)
+		return
+	}
+
+	var requestBody dto.TodoRequest
+
+	if errBinding := ctx.ShouldBindJSON(&requestBody); errBinding != nil {
+		errCasting, ok := errBinding.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequest("invalid request body")
+			ctx.AbortWithStatusJSON(newErrBind.Code(), newErrBind)
+			return
+		}
+
+		errBinds := []string{}
+		for _, e := range errCasting {
+			errBind := fmt.Sprintf("error on field %s, condition : %s", e.Field(), e.ActualTag())
+			errBinds = append(errBinds, errBind)
+		}
+		newErrBind := errs.NewUnprocessableEntity(errBinds)
+		ctx.AbortWithStatusJSON(newErrBind.Code(), newErrBind)
+		return
+	}
+
+	response, errUpdated := t.todoService.UpdateTodo(todoId, requestBody)
+	if errUpdated != nil {
+		ctx.AbortWithStatusJSON(errUpdated.Code(), errUpdated)
 		return
 	}
 

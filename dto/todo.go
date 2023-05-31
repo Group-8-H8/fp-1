@@ -2,8 +2,9 @@ package dto
 
 import "time"
 
-type CreateTodoRequest struct {
-	Title string `json:"title" binding:"required"`
+type TodoRequest struct {
+	Title     string `json:"title" binding:"required"`
+	Completed bool   `json:"completed"`
 }
 
 type TodoResponse struct {

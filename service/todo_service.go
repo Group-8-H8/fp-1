@@ -10,9 +10,10 @@ import (
 )
 
 type TodoService interface {
-	CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, errs.MessageErr)
+	CreateTodo(payload dto.TodoRequest) (*dto.Response, errs.MessageErr)
 	GetTodos() (*dto.Response, errs.MessageErr)
 	GetTodo(todoId int) (*dto.Response, errs.MessageErr)
+	UpdateTodo(todoId int, payload dto.TodoRequest) (*dto.Response, errs.MessageErr)
 }
 
 type todoService struct {
@@ -23,10 +24,10 @@ func NewTodoService(todoRepo todo_repository.TodoRepository) TodoService {
 	return &todoService{todoRepo: todoRepo}
 }
 
-func (t *todoService) CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, errs.MessageErr) {
+func (t *todoService) CreateTodo(payload dto.TodoRequest) (*dto.Response, errs.MessageErr) {
 	todo := entity.Todo{
 		Title:     payload.Title,
-		Completed: false,
+		Completed: payload.Completed,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -42,7 +43,7 @@ func (t *todoService) CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, 
 		Completed: createdTodo.Completed,
 	}
 
-	todoGetResponse := dto.TodoCreateResponse{
+	todoCreateResponse := dto.TodoCreateResponse{
 		TodoResponse: todoResponse,
 		CreatedAt:    createdTodo.CreatedAt,
 	}
@@ -50,7 +51,7 @@ func (t *todoService) CreateTodo(payload dto.CreateTodoRequest) (*dto.Response, 
 	response := &dto.Response{
 		Status:  "CREATED",
 		Message: "todo created successfully",
-		Data:    todoGetResponse,
+		Data:    todoCreateResponse,
 	}
 
 	return response, nil
@@ -114,3 +115,42 @@ func (t *todoService) GetTodo(todoId int) (*dto.Response, errs.MessageErr) {
 
 	return response, nil
 }
+
+func (t *todoService) UpdateTodo(todoId int, payload dto.TodoRequest) (*dto.Response, errs.MessageErr) {
+	if _, errCheck := t.todoRepo.GetTodoById(todoId); errCheck != nil && errCheck.Code() == 404 {
+		return nil, errCheck
+	}
+
+	todo := entity.Todo{
+		Id:        uint(todoId),
+		Title:     payload.Title,
+		Completed: payload.Completed,
+		UpdatedAt: time.Now(),
+	}
+
+	updatedTodo, err := t.todoRepo.UpdateTodo(todo)
+	if err != nil {
+		return nil, err
+	}
+
+	todoResponse := dto.TodoResponse{
+		Id:        updatedTodo.Id,
+		Title:     updatedTodo.Title,
+		Completed: updatedTodo.Completed,
+	}
+
+	todoUpdateResponse := dto.TodoUpdateResponse{
+		TodoResponse: todoResponse,
+		UpdatedAt:    updatedTodo.UpdatedAt,
+	}
+
+	response := &dto.Response{
+		Status:  "OK",
+		Message: "todo updated successfully",
+		Data:    todoUpdateResponse,
+	}
+
+	return response, nil
+}
+
+// BELUM DITESTING
