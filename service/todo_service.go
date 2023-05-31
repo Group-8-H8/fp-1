@@ -42,17 +42,14 @@ func (t *todoService) CreateTodo(payload dto.TodoRequest) (*dto.Response, errs.M
 		Id:        createdTodo.Id,
 		Title:     createdTodo.Title,
 		Completed: createdTodo.Completed,
-	}
-
-	todoCreateResponse := dto.TodoCreateResponse{
-		TodoResponse: todoResponse,
-		CreatedAt:    createdTodo.CreatedAt,
+		CreatedAt: &createdTodo.CreatedAt,
+		UpdatedAt: nil,
 	}
 
 	response := &dto.Response{
 		Status:  "CREATED",
 		Message: "todo created successfully",
-		Data:    todoCreateResponse,
+		Data:    todoResponse,
 	}
 
 	return response, nil
@@ -64,27 +61,23 @@ func (t *todoService) GetTodos() (*dto.Response, errs.MessageErr) {
 		return nil, err
 	}
 
-	todoGetResponses := []dto.TodoGetResponse{}
+	todoResponses := []dto.TodoResponse{}
 	for _, todo := range getTodos {
 		todoResponse := dto.TodoResponse{
 			Id:        todo.Id,
 			Title:     todo.Title,
 			Completed: todo.Completed,
+			CreatedAt: &todo.CreatedAt,
+			UpdatedAt: &todo.UpdatedAt,
 		}
 
-		todoGetResponse := dto.TodoGetResponse{
-			TodoResponse: todoResponse,
-			CreatedAt:    todo.CreatedAt,
-			UpdatedAt:    todo.UpdatedAt,
-		}
-
-		todoGetResponses = append(todoGetResponses, todoGetResponse)
+		todoResponses = append(todoResponses, todoResponse)
 	}
 
 	response := &dto.Response{
 		Status:  "OK",
 		Message: "all todos found",
-		Data:    todoGetResponses,
+		Data:    todoResponses,
 	}
 
 	return response, nil
@@ -100,18 +93,14 @@ func (t *todoService) GetTodo(todoId int) (*dto.Response, errs.MessageErr) {
 		Id:        getTodo.Id,
 		Title:     getTodo.Title,
 		Completed: getTodo.Completed,
-	}
-
-	todoGetResponse := dto.TodoGetResponse{
-		TodoResponse: todoResponse,
-		CreatedAt:    getTodo.CreatedAt,
-		UpdatedAt:    getTodo.UpdatedAt,
+		CreatedAt: &getTodo.CreatedAt,
+		UpdatedAt: &getTodo.UpdatedAt,
 	}
 
 	response := &dto.Response{
 		Status:  "OK",
 		Message: "todo found",
-		Data:    todoGetResponse,
+		Data:    todoResponse,
 	}
 
 	return response, nil
@@ -138,17 +127,13 @@ func (t *todoService) UpdateTodo(todoId int, payload dto.TodoRequest) (*dto.Resp
 		Id:        updatedTodo.Id,
 		Title:     updatedTodo.Title,
 		Completed: updatedTodo.Completed,
-	}
-
-	todoUpdateResponse := dto.TodoUpdateResponse{
-		TodoResponse: todoResponse,
-		UpdatedAt:    updatedTodo.UpdatedAt,
+		UpdatedAt: &updatedTodo.UpdatedAt,
 	}
 
 	response := &dto.Response{
 		Status:  "OK",
 		Message: "todo updated successfully",
-		Data:    todoUpdateResponse,
+		Data:    todoResponse,
 	}
 
 	return response, nil
