@@ -20,3 +20,9 @@ type Response struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
 }
+
+type ErrData struct {
+	ErrStatus  string `json:"status"`
+	ErrMessage any    `json:"message"`
+	ErrCode    int    `json:"code"`
+}

@@ -1,0 +1,155 @@
+basePath: /todos
+definitions:
+  dto.ErrData:
+    properties:
+      code:
+        type: integer
+      message: {}
+      status:
+        type: string
+    type: object
+  dto.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  dto.TodoRequest:
+    properties:
+      completed:
+        type: boolean
+      title:
+        type: string
+    required:
+    - title
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a documentation for todolist API from final project 1 - Group
+    8 Hacktiv8
+  title: Final Project 1 - Group 8 Hacktiv8
+  version: "1.0"
+paths:
+  /todos:
+    get:
+      description: get all todos
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Response'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrData'
+      summary: Get All Todos
+      tags:
+      - todo
+    post:
+      consumes:
+      - application/json
+      description: create todo by user
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TodoRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrData'
+      summary: Create Todo
+      tags:
+      - todo
+  /todos/{todoId}:
+    delete:
+      description: delete todo by todo's id
+      parameters:
+      - description: Id of the todo
+        in: path
+        name: todoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrData'
+      summary: Delete Todo
+      tags:
+      - todo
+    get:
+      description: get todo by todo's id
+      parameters:
+      - description: Id of the todo
+        in: path
+        name: todoId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrData'
+      summary: Get Todo By Id
+      tags:
+      - todo
+    put:
+      consumes:
+      - application/json
+      description: update todo by todo's id
+      parameters:
+      - description: Id of the task
+        in: path
+        name: todoId
+        required: true
+        type: integer
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TodoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrData'
+      summary: Update Todo
+      tags:
+      - todo
+swagger: "2.0"

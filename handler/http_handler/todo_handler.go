@@ -28,6 +28,16 @@ func NewTodoHandler(todoService service.TodoService) TodoHandler {
 	return &todoHandler{todoService: todoService}
 }
 
+// CreateTodo godoc
+// @Summary      Create Todo
+// @Description  create todo by user
+// @Tags         todo
+// @Accept       json
+// @Produce      json
+// @Param				 RequestBody body dto.TodoRequest true "request body json"
+// @Success      201  {object}  dto.Response
+// @Failure      400  {object}  dto.ErrData
+// @Router       /todos [post]
 func (t *todoHandler) CreateTodo(ctx *gin.Context) {
 	var requestBody dto.TodoRequest
 
@@ -57,6 +67,14 @@ func (t *todoHandler) CreateTodo(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
+// GetTodos godoc
+// @Summary      Get All Todos
+// @Description  get all todos
+// @Tags         todo
+// @Produce      json
+// @Success      200  {array}  dto.Response
+// @Failure      400  {object}  dto.ErrData
+// @Router       /todos [get]
 func (t *todoHandler) GetTodos(ctx *gin.Context) {
 	response, errGetTodos := t.todoService.GetTodos()
 	if errGetTodos != nil {
@@ -67,6 +85,15 @@ func (t *todoHandler) GetTodos(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// GetTodo godoc
+// @Summary      Get Todo By Id
+// @Description  get todo by todo's id
+// @Tags         todo
+// @Produce      json
+// @Param 			 todoId path int true "Id of the todo"
+// @Success      200  {object}  dto.Response
+// @Failure      400  {object}  dto.ErrData
+// @Router       /todos/{todoId} [get]
 func (t *todoHandler) GetTodo(ctx *gin.Context) {
 	param := ctx.Param("todoId")
 	todoId, errConv := strconv.Atoi(param)
@@ -85,6 +112,17 @@ func (t *todoHandler) GetTodo(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// UpdateTodo godoc
+// @Summary      Update Todo
+// @Description  update todo by todo's id
+// @Tags         todo
+// @Accept       json
+// @Produce      json
+// @Param				 todoId path int true "Id of the task"
+// @Param				 RequestBody body dto.TodoRequest true "request body json"
+// @Success      200  {object}  dto.Response
+// @Failure      400  {object}  dto.ErrData
+// @Router       /todos/{todoId} [put]
 func (t *todoHandler) UpdateTodo(ctx *gin.Context) {
 	param := ctx.Param("todoId")
 	todoId, errConv := strconv.Atoi(param)
@@ -123,6 +161,15 @@ func (t *todoHandler) UpdateTodo(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// DeleteTodo godoc
+// @Summary      Delete Todo
+// @Description  delete todo by todo's id
+// @Tags         todo
+// @Produce      json
+// @Param 			 todoId path int true "Id of the todo"
+// @Success      200  {object}  dto.Response
+// @Failure      400  {object}  dto.ErrData
+// @Router       /todos/{todoId} [delete]
 func (t *todoHandler) DeleteTodo(ctx *gin.Context) {
 	param := ctx.Param("todoId")
 	todoId, errConv := strconv.Atoi(param)
