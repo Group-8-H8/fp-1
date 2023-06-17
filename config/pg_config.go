@@ -2,7 +2,7 @@ package config
 
 import (
 	"fmt"
-	"log"
+	// "log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -10,11 +10,11 @@ import (
 	"gorm.io/gorm"
 )
 
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalln(err.Error())
-	}
-}
+// func init() {
+// 	if err := godotenv.Load(); err != nil {
+// 		log.Fatalln(err.Error())
+// 	}
+// }
 
 func GetDBConfig() gorm.Dialector {
 	dsn := fmt.Sprintf(
