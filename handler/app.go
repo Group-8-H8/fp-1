@@ -7,7 +7,7 @@ import (
 	"github.com/Group-8-H8/fp-1/repository/todo_repository/todo_pg"
 	"github.com/Group-8-H8/fp-1/service"
 	"github.com/gin-gonic/gin"
-
+	"os"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -21,6 +21,7 @@ import (
 
 func StartApp() {
 	db := database.GetDbInstance()
+	port := os.Getenv("PORT")
 
 	todoRepo := todo_pg.NewTodoRepo(db)
 	todoService := service.NewTodoService(todoRepo)
@@ -39,5 +40,5 @@ func StartApp() {
 
 	route.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	route.Run(":8080")
+	route.Run(":" + port)
 }
