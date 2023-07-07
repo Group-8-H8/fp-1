@@ -2,8 +2,8 @@
 
 ### API Specs
 
-See more detail of api specification in [here](https://fp-1-production.up.railway.app/swagger/index.html)
+See more detail of api specification in [here](https://fp-1-production-e13e.up.railway.app/swagger/index.html)
 
 ### Main URI
 
-[https://fp-1-production.up.railway.app](https://fp-1-production.up.railway.app)
+[https://fp-1-production-e13e.up.railway.app](https://fp-1-production-e13e.up.railway.app)

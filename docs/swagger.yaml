@@ -25,7 +25,7 @@ definitions:
     required:
     - title
     type: object
-host: localhost:8080
+host: fp-1-production-e13e.up.railway.app
 info:
   contact: {}
   description: This is a documentation for todolist API from final project 1 - Group
