@@ -243,7 +243,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "fp-1-production-e13e.up.railway.app",
-	BasePath:         "/todos",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Final Project 1 - Group 8 Hacktiv8",
 	Description:      "This is a documentation for todolist API from final project 1 - Group 8 Hacktiv8",

@@ -18,7 +18,6 @@ import (
 // @description     This is a documentation for todolist API from final project 1 - Group 8 Hacktiv8
 
 // @host      fp-1-production-e13e.up.railway.app
-// @BasePath  /todos
 
 func StartApp() {
 	db := database.GetDbInstance()
